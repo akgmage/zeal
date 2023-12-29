@@ -4,9 +4,10 @@ import "github.com/akgmage/zeal/token"
 
 type Lexer struct {
 	input        string
-	position     int
-	readPosition int
-	ch           byte
+	// positino and readPosition will be used to access characters in input by using them as index
+	position     int // current position in input (points to current character that corresponds to ch byte)
+	readPosition int // points to next character in input after current character
+	ch           byte // current character
 }
 
 func New(input string) *Lexer {
@@ -15,9 +16,10 @@ func New(input string) *Lexer {
 	return l
 }
 
+// readChar gives us the next character and advance our position in the input string
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
-		l.ch = 0
+		l.ch = 0 // 0 ASCII code for "NUL"
 	} else {
 		l.ch = l.input[l.readPosition]
 	}
@@ -26,6 +28,7 @@ func (l *Lexer) readChar() {
 
 }
 
+// We look at current character under examination (l.ch) and return a token depending on which character it is
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 	l.skipWhiteSpace()
